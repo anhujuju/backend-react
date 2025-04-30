@@ -1,14 +1,14 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import os
 from pymongo import MongoClient
 from django.contrib.auth.hashers import make_password, check_password
 
-# 🔗 Conexión a MongoDB Atlas
-client = MongoClient(
-    "mongodb+srv://reactproject:Pepeandfifi_12@cluster0.n5bjjcb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-)
-db = client["react"]  # Nombre correcto de la base de datos
+# 🔐 Conexión segura a MongoDB Atlas usando variable de entorno
+MONGO_URI = os.environ.get("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client["react"]
 users_collection = db["users"]
 
 @csrf_exempt
@@ -66,6 +66,7 @@ def register(request):
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
+
 @csrf_exempt
 def login(request):
     if request.method == "POST":
@@ -107,6 +108,7 @@ def login(request):
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
+
 @csrf_exempt
 def update_score(request):
     if request.method == "POST":
@@ -134,6 +136,7 @@ def update_score(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
 
 @csrf_exempt
 def get_user(request):
