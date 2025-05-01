@@ -2,19 +2,18 @@ import os
 from pathlib import Path
 from pymongo import MongoClient
 
-# 📁 BASE_DIR: raíz del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 🔐 SECRET_KEY desde variable de entorno
+# 🔐 Clave secreta desde variable de entorno (con fallback)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-insegura-por-defecto')
 
-# ⚙️ DEBUG controlado por variable de entorno
+# 🐛 Debug según entorno
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# 🌍 Hosts permitidos
-ALLOWED_HOSTS = ['backend-cali-app.onrender.com', 'localhost']
+# 🌐 Dominios permitidos
+ALLOWED_HOSTS = ['backend-react-jvqo.onrender.com', 'localhost']
 
-# 📦 Apps instaladas
+# 🧩 Apps instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,14 +21,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # para permitir peticiones externas
+    'corsheaders',  # CORS para peticiones externas
 ]
 
-# 🧱 Middlewares
+# ⚙️ Middlewares
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # servir estáticos en prod
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # servir estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -38,16 +37,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# 🌐 CORS permitido desde tu Netlify
-CORS_ALLOWED_ORIGINS = [
-    "https://stunning-kitsune-fb0469.netlify.app",  # reemplázalo si cambias URL
-]
+# 🌍 CORS
+CORS_ALLOW_ALL_ORIGINS = True  # ⚠️ Solo para pruebas (permite solicitudes desde file://, Netlify, etc.)
 
-# 🔧 URL root y WSGI
+# 🧠 URL y WSGI
 ROOT_URLCONF = 'backend.urls'
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# 🗄️ Base de datos predeterminada (no se usa, pero necesaria)
+# 🧱 Base de datos predeterminada (no usada, pero obligatoria)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -55,41 +52,7 @@ DATABASES = {
     }
 }
 
-# 🌍 Lenguaje y zona horaria
-LANGUAGE_CODE = 'es-co'
-TIME_ZONE = 'America/Bogota'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-# 📁 Archivos estáticos
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = []
-
-# 🔗 MongoDB Atlas (usa variable de entorno)
-MONGO_URI = os.environ.get("MONGO_URI")
-client = MongoClient(MONGO_URI)
-db = client["react"]
-users_collection = db["users"]
-
-# 🔐 Contraseña (por defecto)
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# 🔤 Plantillas
+# 🔡 Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -105,3 +68,36 @@ TEMPLATES = [
         },
     },
 ]
+
+# 🗓️ Config regional
+LANGUAGE_CODE = 'es-co'
+TIME_ZONE = 'America/Bogota'
+USE_I18N = True
+USE_TZ = True
+
+# 📁 Archivos estáticos
+STATIC_URL = '/static/'
+STATICFILES_DIRS = []
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# 🔐 Validación de contraseñas (opcional)
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# 🔗 MongoDB Atlas
+MONGO_URI = os.environ.get("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client["react"]
+users_collection = db["users"]
